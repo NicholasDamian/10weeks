@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--creates a custom view based on our specific java class instead of generic layout.
+extends relative so it gets all the relative layout stuff-->
+
+<com.example.matthewwatson.budget.Views.BudgetListView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+</com.example.matthewwatson.budget.Views.BudgetListView>

@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Budget</string>
+    <string name="username">Username</string>
+    <string name="e_mail_address">E-mail Address</string>
+    <string name="password">Password</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="register">Register</string>
+    <string name="login">Login</string>
+</resources>
