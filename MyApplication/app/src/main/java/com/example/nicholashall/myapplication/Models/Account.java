@@ -8,10 +8,6 @@ import com.google.gson.annotations.SerializedName;
 
 public class Account {
 
-
-    @SerializedName("Email")
-    private String email;
-
     @SerializedName("FullName")
     private String fullName;
 
@@ -24,6 +20,9 @@ public class Account {
     @SerializedName("Password")
     private String password;
 
+    @SerializedName("Email")
+    private String email;
+
 
     public Account(String email, String fullName, String picture, String apiKey, String password) {
         this.email = email;
@@ -31,6 +30,11 @@ public class Account {
         this.picture = picture;
         this.apiKey = apiKey;
         this.password = password;
+    }
+
+    public Account(String picture, String fullName) {
+        this.picture = picture;
+        this.fullName = fullName;
     }
 
     public String getEmail() {
@@ -72,5 +76,7 @@ public class Account {
     public void setPassword(String password) {
         this.password = password;
     }
+
+
 
 }

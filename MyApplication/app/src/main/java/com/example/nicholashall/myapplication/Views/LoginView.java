@@ -10,6 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.example.nicholashall.myapplication.MainActivity;
 import com.example.nicholashall.myapplication.Models.Authorization;
 import com.example.nicholashall.myapplication.Network.RestClient;
 import com.example.nicholashall.myapplication.Network.UserStore;
@@ -58,6 +59,10 @@ public class LoginView extends LinearLayout {
     protected void onFinishInflate() {
         super.onFinishInflate();
         ButterKnife.bind(this);
+
+//        maybe
+        ((MainActivity)context).showMenuItem(false);
+
     }
 
     @OnClick(R.id.register_button)
