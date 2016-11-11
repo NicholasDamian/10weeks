@@ -81,7 +81,7 @@ public class RegisterView extends LinearLayout {
         String email = emailField.getText().toString();
         String password = passwordField.getText().toString();
         String confirm = confirmField.getText().toString();
-        String picture ="picture";
+        String picture ="yellow";
         String apiKey ="iOSandroid301november2016";
 
         if(username.isEmpty() || email.isEmpty() || password.isEmpty() ||confirm.isEmpty()){

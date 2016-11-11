@@ -46,13 +46,15 @@ public class MainActivity extends AppCompatActivity {
     private Context context;
     private Flow flow;
     private ScreenplayDispatcher dispatcher;
+
     public Bundle savedInstanceState;
 
 //    this look at it
-    public static int RESULT_LOAD_IMAGE = 1;
+    private static int RESULT_LOAD_IMAGE = 1;
 
     @Bind(R.id.container)
     RelativeLayout container;
+
     private Menu menu;
 
     @Override
@@ -143,7 +145,7 @@ public class MainActivity extends AppCompatActivity {
             if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && data != null){
 
                 Uri selectedImage = data.getData();
-                String[] filePathColumn = {MediaStore.Images.Media.DATA};
+                String[] filePathColumn = {MediaStore.Images.Media.DATA };
                 Cursor cursor = getContentResolver().query(selectedImage, filePathColumn, null, null, null);
                 cursor.moveToFirst();
 
@@ -151,7 +153,12 @@ public class MainActivity extends AppCompatActivity {
                 String imageString = cursor.getString(columnIndex);
                 cursor.close();
 
+                Log.i("yellow",imageString);
                 //Convert to Bitmap Array
+
+
+
+
                 Bitmap bm = BitmapFactory.decodeFile(imageString);
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
                 bm.compress(Bitmap.CompressFormat.JPEG, 100, baos); //bm is the bitmap object
@@ -160,7 +167,7 @@ public class MainActivity extends AppCompatActivity {
                 //Take the bitmap Array and e
                 // encode it to Base64
                 String encodedImage = Base64.encodeToString(b, Base64.DEFAULT);
-
+//
                 Log.d("***BASE64****", encodedImage);
                 makeApiCallForProfile(encodedImage);
 

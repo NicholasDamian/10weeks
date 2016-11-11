@@ -38,4 +38,10 @@ public interface ApiService {
     @POST("/api/Account/UserInfo")
     Call<Void>postUserInfo(@Body Account account);
 
+    @GET ("/v1/User/Caught")
+    Call<User[]> caughtUsers();
+
+    @POST("/v1/User/Catch")
+    Call<Void> catchUser(@Body User user);
+
 }

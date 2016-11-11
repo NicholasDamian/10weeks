@@ -38,6 +38,8 @@ import retrofit2.Response;
 public class EditView extends RelativeLayout{
     private Context context;
 
+//    permission request to your edit profile view
+
     @Bind(R.id.edit_name_field)
     EditText editNameField;
 

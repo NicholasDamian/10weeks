@@ -17,17 +17,42 @@ public class User {
     @SerializedName("FullName")
     private String fullName;
 
-    @SerializedName("AvatarBase64")
-    private String avatarBase64;
-
     @SerializedName("CaughtUserId")
     private String caughtUserId;
 
     @SerializedName("RadiusInMeters")
-    private Integer radiusInMeters;
+    private float radiusInMeters;
 
     @SerializedName("Email")
     private String email;
+
+
+//    These four to see caught
+
+    @SerializedName("UserId")
+    private String userId;
+
+    @SerializedName("UserName")
+    private String userName;
+
+    @SerializedName("Created")
+    private String created;
+
+    @SerializedName("AvatarBase64")
+    private String avatarBase64;
+
+
+
+    public User(String userId, String userName, String created, String avatarBase64) {
+        this.userId = userId;
+        this.userName = userName;
+        this.created = created;
+        this.avatarBase64 = avatarBase64;
+    }
+
+    public User(String userName) {
+        this.userName = userName;
+    }
 
     public User() {
     }
@@ -46,9 +71,15 @@ public class User {
         Longitude = longitude;
         Latitude = latitude;
     }
+    public User(String caughtUserId, float radiusInMeters) {
+        this.caughtUserId = caughtUserId;
+        this.radiusInMeters = radiusInMeters;
+    }
 
 
-
+    public String getUserName() {
+        return userName;
+    }
 
     public double getLongitude() {
         return Longitude;
@@ -90,8 +121,12 @@ public class User {
         this.caughtUserId = caughtUserId;
     }
 
-    public Integer getRadiusInMeters() {
+    public float getRadiusInMeters() {
         return radiusInMeters;
+    }
+
+    public void setRadiusInMeters(float radiusInMeters) {
+        this.radiusInMeters = radiusInMeters;
     }
 
     public void setRadiusInMeters(Integer radiusInMeters) {
@@ -104,5 +139,25 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getCreated() {
+        return created;
+    }
+
+    public void setCreated(String created) {
+        this.created = created;
     }
 }
