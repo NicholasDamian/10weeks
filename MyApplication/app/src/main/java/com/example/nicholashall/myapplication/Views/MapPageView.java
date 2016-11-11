@@ -18,11 +18,13 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.example.nicholashall.myapplication.MainActivity;
+import com.example.nicholashall.myapplication.Models.Account;
 import com.example.nicholashall.myapplication.Models.User;
 import com.example.nicholashall.myapplication.Network.RestClient;
 import com.example.nicholashall.myapplication.PeopleMon;
 import com.example.nicholashall.myapplication.R;
 import com.example.nicholashall.myapplication.Stages.CaughtPeopleListStage;
+import com.example.nicholashall.myapplication.Stages.NearbyPeopleStage;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -66,6 +68,7 @@ public class MapPageView extends RelativeLayout implements OnMapReadyCallback,
     public Double latitude = 37.816380;
     public static Location mLocation;
     LatLng Home = new LatLng(latitude,longitude);
+    public Bitmap myMarker;
 
     @Bind(R.id.map)
     public MapView mapView;
@@ -84,6 +87,15 @@ public class MapPageView extends RelativeLayout implements OnMapReadyCallback,
         flow.setHistory(newHistory, Flow.Direction.FORWARD);
     }
 
+    @OnClick(R.id.nearby_peoplemon_view_button)
+    public void showListCategoryView(){
+        Flow flow = PeopleMon.getMainFlow();
+        History newHistory = flow.getHistory().buildUpon()
+                .push(new NearbyPeopleStage())
+                .build();
+        flow.setHistory(newHistory, Flow.Direction.FORWARD);
+    }
+
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
@@ -98,7 +110,6 @@ public class MapPageView extends RelativeLayout implements OnMapReadyCallback,
     }
 
     public void onMapReady(GoogleMap googleMap) {
-
         mMap = googleMap;
         mMap.getUiSettings().isMyLocationButtonEnabled();
         mMap.getUiSettings().setMyLocationButtonEnabled(true);
@@ -119,7 +130,28 @@ public class MapPageView extends RelativeLayout implements OnMapReadyCallback,
         @Override
         public void onMyLocationChange(Location location) {
             LatLng loc = new LatLng(location.getLatitude(), location.getLongitude());
+
+            RestClient restClient = new RestClient();
+            restClient.getApiService().getUserInfo().enqueue(new Callback<Account>() {
+                @Override
+                public void onResponse(Call<Account> call, Response<Account> response) {
+                    if(response.isSuccessful()){
+                        Account authUser = response.body();
+                    }
+
+
+                }
+
+                @Override
+                public void onFailure(Call<Account> call, Throwable t) {
+
+                }
+            });
+
+
             mMap.addMarker(new MarkerOptions().position(loc));
+
+
             mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(loc, 17.0f));
             longitude = location.getLongitude();
             latitude = location.getLatitude();
@@ -153,6 +185,8 @@ public class MapPageView extends RelativeLayout implements OnMapReadyCallback,
                 }
             });
             vAnimator.start();
+
+
         }
     };
 

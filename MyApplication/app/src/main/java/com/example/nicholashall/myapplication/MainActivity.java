@@ -43,6 +43,10 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
+
+//    public static String yellow;
+
+
     private Context context;
     private Flow flow;
     private ScreenplayDispatcher dispatcher;
@@ -185,7 +189,8 @@ public class MainActivity extends AppCompatActivity {
                 //Take the bitmap Array and e
                 // encode it to Base64
                 String encodedImage = Base64.encodeToString(b, Base64.DEFAULT);
-//
+
+
                 Log.d("***BASE64****", encodedImage);
                 makeApiCallForProfile(encodedImage);
 

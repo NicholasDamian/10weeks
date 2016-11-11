@@ -19,4 +19,17 @@
             android:layout_margin="10dp"
             android:src="@drawable/common_ic_googleplayservices"/>
 
+    <android.support.design.widget.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/nearby_peoplemon_view_button"
+        app:fabSize="normal"
+        android:layout_gravity="bottom|end"
+        android:src="@drawable/common_ic_googleplayservices"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="15dp" />
+
 </com.example.nicholashall.myapplication.Views.MapPageView>
