@@ -3,12 +3,15 @@ package com.example.nicholashall.myapplication.Views;
 import android.animation.IntEvaluator;
 import android.animation.ValueAnimator;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
+import android.util.Base64;
 import android.util.Log;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.RelativeLayout;
@@ -185,65 +188,139 @@ public class MapPageView extends RelativeLayout implements OnMapReadyCallback,
                     longitude = user.getLongitude();
                     String userId = user.getUserId();
 
-                    final LatLng userpos = new LatLng(latitude, longitude);
-                    mMap.addMarker(new MarkerOptions().title(user.getUserName())
-                            //           .icon(BitmapDescriptorFactory.fromBitmap(decodedByte))
-                            .snippet(user.getUserId())
-                            .position(userpos));
-                    mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-                        @Override
-                        public boolean onMarkerClick(Marker marker) {
-                            Location userLoc = new Location("");
-                            userLoc.setLatitude(marker.getPosition().latitude);
-                            userLoc.setLongitude(marker.getPosition().longitude);
-                            final String CaughtUserId = marker.getSnippet();
-                            final User user = new User(CaughtUserId, mLocation.distanceTo(userLoc));
+                    if (user.getAvatarBase64() == null || user.getAvatarBase64().length() <= 100) {
 
 
-                            Double latC = marker.getPosition().latitude;
-                            Double lngC = marker.getPosition().longitude;
-                            LatLng markCircle = new LatLng(latC, lngC);
-                            final Circle circle = mMap.addCircle(new CircleOptions().center(markCircle)
-                                    .strokeColor(Color.RED).radius(10));
-                            ValueAnimator vAnimator = new ValueAnimator();
-                            vAnimator.setRepeatCount(1);
-                            vAnimator.setRepeatMode(ValueAnimator.REVERSE);
-                            vAnimator.setIntValues(10, 0);
-                            vAnimator.setDuration(500);
-                            vAnimator.setEvaluator(new IntEvaluator());
-                            vAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
-                            vAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                                @Override
-                                public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                                    float animatedFraction = valueAnimator.getAnimatedFraction();
-                                    circle.setRadius(animatedFraction * 10);
-                                }
-                            });
-                            vAnimator.start();
+                        final LatLng userpos = new LatLng(latitude, longitude);
+                        mMap.addMarker(new MarkerOptions().title(user.getUserName())
+                                //           .icon(BitmapDescriptorFactory.fromBitmap(decodedByte))
+                                .snippet(user.getUserId())
+                                .position(userpos));
+                        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+                            @Override
+                            public boolean onMarkerClick(Marker marker) {
+                                Location userLoc = new Location("");
+                                userLoc.setLatitude(marker.getPosition().latitude);
+                                userLoc.setLongitude(marker.getPosition().longitude);
+                                final String CaughtUserId = marker.getSnippet();
+                                final User user = new User(CaughtUserId, mLocation.distanceTo(userLoc));
 
 
-
-
-
-                            RestClient restClient = new RestClient();
-                            restClient.getApiService().catchUser(user).enqueue(new Callback<Void>() {
-                                @Override
-                                public void onResponse(Call<Void> call, Response<Void> response) {
-                                    if (response.isSuccessful()) {
-                                        Toast.makeText(context, "Person Caught!", Toast.LENGTH_SHORT).show();
-                                    } else {
-                                        Toast.makeText(context, "That person is out side your radius", Toast.LENGTH_LONG).show();
+                                Double latC = marker.getPosition().latitude;
+                                Double lngC = marker.getPosition().longitude;
+                                LatLng markCircle = new LatLng(latC, lngC);
+                                final Circle circle = mMap.addCircle(new CircleOptions().center(markCircle)
+                                        .strokeColor(Color.RED).radius(10));
+                                ValueAnimator vAnimator = new ValueAnimator();
+                                vAnimator.setRepeatCount(1);
+                                vAnimator.setRepeatMode(ValueAnimator.REVERSE);
+                                vAnimator.setIntValues(10, 0);
+                                vAnimator.setDuration(500);
+                                vAnimator.setEvaluator(new IntEvaluator());
+                                vAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
+                                vAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                                    @Override
+                                    public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                                        float animatedFraction = valueAnimator.getAnimatedFraction();
+                                        circle.setRadius(animatedFraction * 10);
                                     }
-                                }
-                                @Override
-                                public void onFailure(Call<Void> call, Throwable t) {
-                                    t.printStackTrace();
-                                }
-                            });
-                            marker.remove();
-                            return false;
+                                });
+                                vAnimator.start();
+
+
+                                RestClient restClient = new RestClient();
+                                restClient.getApiService().catchUser(user).enqueue(new Callback<Void>() {
+                                    @Override
+                                    public void onResponse(Call<Void> call, Response<Void> response) {
+                                        if (response.isSuccessful()) {
+                                            Toast.makeText(context, "Person Caught!", Toast.LENGTH_SHORT).show();
+                                        } else {
+                                            Toast.makeText(context, "That is a Pokemon you can't catch those ", Toast.LENGTH_LONG).show();
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onFailure(Call<Void> call, Throwable t) {
+                                        t.printStackTrace();
+                                    }
+                                });
+                                marker.remove();
+                                return false;
+                            }
+                        });
+                    }else {
+
+                        try {
+                            String encodedImage = user.getAvatarBase64();
+                            byte[] decodedString = Base64.decode(encodedImage, Base64.DEFAULT);
+                            Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+                            decodedByte = Bitmap.createScaledBitmap(decodedByte, 120, 120, false);
+
+                            final LatLng userpos = new LatLng(latitude, longitude);
+                            mMap.addMarker(new MarkerOptions().title(user.getUserName())
+                                    .icon(BitmapDescriptorFactory.fromBitmap(decodedByte))
+                                    .snippet(user.getUserId())
+                                    .position(userpos));
+
+
+                        }catch (Exception e){
+
                         }
-                    });
+                        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+                            @Override
+                            public boolean onMarkerClick(Marker marker) {
+                                Location userLoc = new Location("");
+                                userLoc.setLatitude(marker.getPosition().latitude);
+                                userLoc.setLongitude(marker.getPosition().longitude);
+                                final String CaughtUserId = marker.getSnippet();
+                                final User user = new User(CaughtUserId, mLocation.distanceTo(userLoc));
+
+
+                                Double latC = marker.getPosition().latitude;
+                                Double lngC = marker.getPosition().longitude;
+                                LatLng markCircle = new LatLng(latC, lngC);
+                                final Circle circle = mMap.addCircle(new CircleOptions().center(markCircle)
+                                        .strokeColor(Color.RED).radius(10));
+                                ValueAnimator vAnimator = new ValueAnimator();
+                                vAnimator.setRepeatCount(1);
+                                vAnimator.setRepeatMode(ValueAnimator.REVERSE);
+                                vAnimator.setIntValues(10, 0);
+                                vAnimator.setDuration(500);
+                                vAnimator.setEvaluator(new IntEvaluator());
+                                vAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
+                                vAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                                    @Override
+                                    public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                                        float animatedFraction = valueAnimator.getAnimatedFraction();
+                                        circle.setRadius(animatedFraction * 10);
+                                    }
+                                });
+                                vAnimator.start();
+
+
+                                RestClient restClient = new RestClient();
+                                restClient.getApiService().catchUser(user).enqueue(new Callback<Void>() {
+                                    @Override
+                                    public void onResponse(Call<Void> call, Response<Void> response) {
+                                        if (response.isSuccessful()) {
+                                            Toast.makeText(context, "Person Caught!", Toast.LENGTH_SHORT).show();
+                                        } else {
+                                            Toast.makeText(context, "That is a Pokemon you can't catch those ", Toast.LENGTH_LONG).show();
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onFailure(Call<Void> call, Throwable t) {
+                                        t.printStackTrace();
+                                    }
+                                });
+                                marker.remove();
+                                return false;
+                            }
+                        });
+
+
+                    }
                 }
             }
             @Override
