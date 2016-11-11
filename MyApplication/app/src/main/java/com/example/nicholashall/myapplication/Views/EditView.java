@@ -153,26 +153,17 @@ public class EditView extends RelativeLayout{
                     userName.setText(authUser.getFullName());
                     emailAddress.setText(authUser.getEmail());
                     profileAvatar.setImageBitmap(decodedByte);
-//
-//                    //Get auth token and expiration date
-//                    UserStore.getInstance().setToken(authUser.getToken());
-//                    UserStore.getInstance().setTokenExpiration(authUser.getExpires());
-//
-//                    //Get main flow and set to single history
-//                    Flow flow = getMainFlow();
-//                    History newHistory = History.single(new GameMainStage());
-//                    flow.setHistory(newHistory, Flow.Direction.REPLACE);
 
                 }else{
                     resetView();
-                    Toast.makeText(context,"Get User Info Failed" + ": " + response.code(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(context,"Get User Info Failed" + ": " + response.code(), Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<Account> call, Throwable t) {
                 resetView();
-                Toast.makeText(context,"Get User Info Failed", Toast.LENGTH_LONG).show();
+                Toast.makeText(context,"Get User Info Failed", Toast.LENGTH_SHORT).show();
             }
         });
     }

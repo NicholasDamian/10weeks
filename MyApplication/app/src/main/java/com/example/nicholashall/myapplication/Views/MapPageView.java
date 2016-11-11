@@ -128,11 +128,11 @@ public class MapPageView extends RelativeLayout implements OnMapReadyCallback,
 
             GroundOverlayOptions radar = new GroundOverlayOptions()
                     .image(BitmapDescriptorFactory.fromResource(R.mipmap.radar))
-                    .position(Home, 200f, 200f);
+                    .position(loc, 200f, 200f);
             GroundOverlay imageOverlay = mMap.addGroundOverlay(radar);
 
 
-            final Circle circle = mMap.addCircle(new CircleOptions().center(Home)
+            final Circle circle = mMap.addCircle(new CircleOptions().center(loc)
                     .strokeColor(Color.BLUE).radius(80));
             ValueAnimator vAnimator = new ValueAnimator();
             vAnimator.setRepeatCount(ValueAnimator.INFINITE);
@@ -174,7 +174,7 @@ public class MapPageView extends RelativeLayout implements OnMapReadyCallback,
 
     public void checkNearby(){
         RestClient restClient = new RestClient();
-        restClient.getApiService().getUsers(40000).enqueue(new Callback<User[]>() {
+        restClient.getApiService().getUsers(100).enqueue(new Callback<User[]>() {
             @Override
             public void onResponse(Call<User[]> call, Response<User[]> response) {
                 Toast.makeText(context, "well here is everyone", Toast.LENGTH_SHORT).show();
@@ -198,6 +198,33 @@ public class MapPageView extends RelativeLayout implements OnMapReadyCallback,
                             userLoc.setLongitude(marker.getPosition().longitude);
                             final String CaughtUserId = marker.getSnippet();
                             final User user = new User(CaughtUserId, mLocation.distanceTo(userLoc));
+
+
+                            Double latC = marker.getPosition().latitude;
+                            Double lngC = marker.getPosition().longitude;
+                            LatLng markCircle = new LatLng(latC, lngC);
+                            final Circle circle = mMap.addCircle(new CircleOptions().center(markCircle)
+                                    .strokeColor(Color.RED).radius(10));
+                            ValueAnimator vAnimator = new ValueAnimator();
+                            vAnimator.setRepeatCount(1);
+                            vAnimator.setRepeatMode(ValueAnimator.REVERSE);
+                            vAnimator.setIntValues(10, 0);
+                            vAnimator.setDuration(500);
+                            vAnimator.setEvaluator(new IntEvaluator());
+                            vAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
+                            vAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                                @Override
+                                public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                                    float animatedFraction = valueAnimator.getAnimatedFraction();
+                                    circle.setRadius(animatedFraction * 10);
+                                }
+                            });
+                            vAnimator.start();
+
+
+
+
+
                             RestClient restClient = new RestClient();
                             restClient.getApiService().catchUser(user).enqueue(new Callback<Void>() {
                                 @Override
@@ -247,3 +274,7 @@ public class MapPageView extends RelativeLayout implements OnMapReadyCallback,
         });
     }
 }
+
+
+
+
